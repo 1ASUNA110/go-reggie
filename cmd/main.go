@@ -9,6 +9,9 @@ func main() {
 	// 强制设置日志颜色
 	gin.ForceConsoleColor()
 
+	// 提供静态文件服务
+	r.Static("/static", "./static")
+
 	// 定义路由和处理函数
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

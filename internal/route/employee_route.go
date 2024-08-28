@@ -14,6 +14,8 @@ func SetupEmployeeRoutes(router *gin.Engine) {
 		employeeRoutes.POST("/login", employeeApi.EmployeeLogin)
 
 		employeeRoutes.POST("/logout", employeeApi.EmployeeLogout)
+
+		employeeRoutes.POST("/", employeeApi.EmployeeSave)
 		// 其他 employee 路由
 	}
 

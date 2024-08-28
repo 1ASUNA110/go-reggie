@@ -5,7 +5,7 @@ type ResultCode struct {
 	Msg  string // 异常信息
 }
 
-func FAIL() ResultCode {
+func SERVER_ERROR() ResultCode {
 	return ResultCode{Code: 0, Msg: "失败"}
 }
 
@@ -24,3 +24,7 @@ func USER_LOGIN_ERROR() ResultCode {
 func User_DISABLED_ERROR() ResultCode {
 	return ResultCode{Code: 4, Msg: "账号已禁用"}
 }
+
+func LOGIN_CHECK_ERROR() ResultCode { return ResultCode{Code: 5, Msg: "未登录"} }
+
+func USER_IS_EXIST() ResultCode { return ResultCode{Code: 6, Msg: "用户已存在"} }

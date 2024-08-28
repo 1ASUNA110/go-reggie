@@ -1,6 +1,10 @@
 package dto
 
-type EmployeeLoginDto struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+type EmployeeDto struct {
+	UserName string `json:"username"`  // 用户名
+	Password string `json:"password"`  // 密码
+	Name     string `json:"name"`      // 用户名
+	Phone    string `json:"phone"`     // 手机号
+	Sex      string `json:"sex"`       // 性别
+	IDNumber string `json:"id_number"` // 身份证号
 }

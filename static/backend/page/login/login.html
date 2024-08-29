@@ -102,7 +102,7 @@ l<!DOCTYPE html>
               let res = await loginApi(this.loginForm)
               if (String(res.code) === '1') {
                 localStorage.setItem('userInfo',JSON.stringify(res.data))
-                window.location.href= '/backend/index.html'
+                window.location.href= '/static/backend/index.html'
               } else {
                 this.$message.error(res.msg)
                 this.loading = false

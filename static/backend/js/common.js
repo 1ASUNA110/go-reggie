@@ -1,1 +1,1 @@
-var web_prefix = '/backend'
+var web_prefix = '/static/backend'

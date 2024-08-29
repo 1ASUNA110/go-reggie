@@ -32,9 +32,6 @@ func main() {
 	// 强制设置日志颜色
 	gin.ForceConsoleColor()
 
-	// 提供静态文件服务
-	r.Static("/", "./static")
-
 	// 使用cookie存储session
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("reggieSession", store))
@@ -42,16 +39,19 @@ func main() {
 	// 权限校验中间件
 	r.Use(middleware.AuthMiddleware())
 
-	//
+	// 提供静态文件服务
+	r.Static("/static", "./static")
 
 	//从内部包中初始化数据库
 	db, err := bootstrap.InitDB()
+
 	if err != nil {
 		panic(err)
 	}
 
 	global.DB = db
 
+	// 设置路由
 	route.SetupRouter(r)
 
 	// 启动 HTTP 服务器

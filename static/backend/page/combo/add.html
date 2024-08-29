@@ -603,7 +603,7 @@
           handleAvatarSuccess (response, file, fileList) {
             // this.imageUrl = response.data
             if(response.code === 0 && response.msg === '未登录'){
-              window.top.location.href = '/backend/page/login/login.html'
+              window.top.location.href = '/static/backend/page/login/login.html'
             }else{
               this.imageUrl = `/common/download?name=${response.data}`
               this.ruleForm.image = response.data
@@ -630,7 +630,7 @@
             window.parent.menuHandle(
               {
                 id: '5',
-                url: '/backend/page/combo/list.html',
+                url: '/static/backend/page/combo/list.html',
                 name: '套餐管理',
               },
               false

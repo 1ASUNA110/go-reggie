@@ -139,10 +139,14 @@
               name: this.input ? this.input : undefined
             }
             await getMemberList(params).then(res => {
+
               if (String(res.code) === '1') {
                 this.tableData = res.data.records || []
                 this.counts = res.data.total
+
               }
+
+
             }).catch(err => {
               this.$message.error('请求出错了：' + err)
             })
@@ -156,13 +160,13 @@
             if (st === 'add'){
               window.parent.menuHandle({
                 id: '2',
-                url: '/backend/page/member/add.html',
+                url: '/static/backend/page/member/add.html',
                 name: '添加员工'
               },true)
             } else {
               window.parent.menuHandle({
                 id: '2',
-                url: '/backend/page/member/add.html?id='+st,
+                url: '/static/backend/page/member/add.html?id='+st,
                 name: '修改员工'
               },true)
             }

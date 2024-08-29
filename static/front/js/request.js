@@ -45,7 +45,7 @@
   service.interceptors.response.use(res => {
       console.log('---响应拦截器---',res)
       if (res.data.code === 0 && res.data.msg === 'NOTLOGIN') {// 返回登录页面
-        window.top.location.href = '/front/page/login.html'
+        window.top.location.href = '/static/front/page/login.html'
       } else {
         return res.data
       }
@@ -66,7 +66,7 @@
         type: 'warning',
         duration: 5 * 1000
       })
-      //window.top.location.href = '/front/page/no-wify.html'
+      //window.top.location.href = '/static/front/page/no-wify.html'
       return Promise.reject(error)
     }
   )

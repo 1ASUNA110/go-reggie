@@ -135,7 +135,7 @@
                         
                         if(res.code === 1){
                             window.requestAnimationFrame(()=>{
-                                window.location.replace('/front/page/address.html')
+                                window.location.replace('/static/front/page/address.html')
                             })
                         }else{
                             this.$notify({ type:'warning', message:res.msg});
@@ -150,7 +150,7 @@
                             const res = await deleteAddressApi({ids:this.id })
                             if(res.code === 1){
                                 window.requestAnimationFrame(()=>{
-                                    window.location.replace('/front/page/address.html')
+                                    window.location.replace('/static/front/page/address.html')
                                 })
                             }else{
                                 this.$notify({ type:'warning', message:res.msg});

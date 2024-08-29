@@ -91,3 +91,16 @@ func (m *EmployeeService) EmployeeSave(employeeDto dto.EmployeeDto, createUser i
 	return response.SUCCESS()
 
 }
+
+func (m *EmployeeService) EmployeePage(page int, pageSize int, name string) (response.Page, response.ResultCode) {
+
+	// 3、查询数据库
+	employeePage, err := m.employeeDao.EmployeePage(page, pageSize, name)
+
+	if err != nil {
+		return response.Page{}, response.SERVER_ERROR()
+	}
+
+	return employeePage, response.SUCCESS()
+
+}

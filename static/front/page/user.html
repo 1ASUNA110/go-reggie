@@ -116,12 +116,12 @@
                 },
                 toAddressPage(){
                     window.requestAnimationFrame(()=>{
-                        window.location.href = '/front/page/address.html'
+                        window.location.href = '/static/front/page/address.html'
                     })  
                 },
                 toOrderPage(){
                     window.requestAnimationFrame(()=>{
-                        window.location.href = '/front/page/order.html'
+                        window.location.href = '/static/front/page/order.html'
                     }) 
                 },
                 initData(){
@@ -172,7 +172,7 @@
                     const res = await orderAgainApi({id:this.order[0].id})
                     if(res.code === 1){
                         window.requestAnimationFrame(()=>{
-                            window.location.href = '/front/index.html'
+                            window.location.href = '/static/front/index.html'
                         }) 
                     }else{
                         this.$notify({ type:'warning', message:res.msg});
@@ -182,7 +182,7 @@
                     const res = await loginoutApi()
                     if(res.code === 1){
                         window.requestAnimationFrame(()=>{
-                            window.location.href = '/front/page/login.html'
+                            window.location.href = '/static/front/page/login.html'
                         }) 
                     }else{
                         this.$notify({ type:'warning', message:res.msg});

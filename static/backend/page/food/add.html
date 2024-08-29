@@ -508,7 +508,7 @@
           handleAvatarSuccess (response, file, fileList) {
             // 拼接down接口预览
             if(response.code === 0 && response.msg === '未登录'){
-              window.top.location.href = '/backend/page/login/login.html'
+              window.top.location.href = '/static/backend/page/login/login.html'
             }else{
               this.imageUrl = `/common/download?name=${response.data}`
               this.ruleForm.image = response.data
@@ -535,7 +535,7 @@
           goBack(){
             window.parent.menuHandle({
               id: '4',
-              url: '/backend/page/food/list.html',
+              url: '/static/backend/page/food/list.html',
               name: '菜品管理'
             },false)
           }

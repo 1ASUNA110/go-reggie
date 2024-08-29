@@ -21,8 +21,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		allowedUrls := []string{
 			"^/employee/login$",
 			"^/employee/logout$",
-			"^/backend/.*$",
-			"^/front/.*$",
+			"^/static/backend/.*$",
+			"^/static/front/.*$",
 		}
 
 		// 2、判断本次请求是否需要登录认证，如果不需要，直接放行

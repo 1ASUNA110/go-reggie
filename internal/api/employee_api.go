@@ -6,6 +6,7 @@ import (
 	"go-reggie/internal/model/dto"
 	"go-reggie/internal/service"
 	"go-reggie/internal/utils/response"
+	"strconv"
 )
 
 type EmployeeApi struct {
@@ -24,6 +25,7 @@ func NewEmployeeApi() *EmployeeApi {
 	return employeeApi
 }
 
+// EmployeeLogin 员工登录
 func (m *EmployeeApi) EmployeeLogin(c *gin.Context) {
 
 	// 1、校验请求参数
@@ -53,6 +55,7 @@ func (m *EmployeeApi) EmployeeLogin(c *gin.Context) {
 	}
 }
 
+// 员工退出
 func (m *EmployeeApi) EmployeeLogout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
@@ -60,6 +63,7 @@ func (m *EmployeeApi) EmployeeLogout(c *gin.Context) {
 	response.Ok(nil, c)
 }
 
+// EmployeeSave 新增员工
 func (m *EmployeeApi) EmployeeSave(c *gin.Context) {
 	// 1、校验请求参数
 	var employeeDto dto.EmployeeDto
@@ -83,4 +87,37 @@ func (m *EmployeeApi) EmployeeSave(c *gin.Context) {
 	}
 
 	response.Fail(errorCode, c)
+}
+
+// EmployeePage 员工分页查询
+func (m *EmployeeApi) EmployeePage(c *gin.Context) {
+	// 1、校验请求参数
+
+	// 2、获取page pageSize
+	pageStr := c.DefaultQuery("page", "1")
+	pageSizeStr := c.DefaultQuery("pageSize", "10")
+
+	// 将字符串转换为整数
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	pageSize, err := strconv.Atoi(pageSizeStr)
+	if err != nil || pageSize < 1 {
+		pageSize = 10
+	}
+
+	name := c.DefaultQuery("name", "")
+
+	// 3、调用service层 分页查询员工信息
+	employeePage, errorCode := m.employeeService.EmployeePage(page, pageSize, name)
+
+	if errorCode.Code == response.SUCCESS().Code {
+		response.Ok(employeePage, c)
+		return
+	}
+
+	response.Fail(errorCode, c)
+
 }

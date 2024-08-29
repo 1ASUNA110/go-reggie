@@ -146,7 +146,7 @@ func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, empl
 	// 5、设置updateTime
 	updateMap["update_time"] = time.Now()
 
-	// 2、调用dao层更新 员工信息
+	// 6、调用dao层更新 员工信息
 	err := m.employeeDao.EmployeeUpdate(updateMap)
 
 	if err != nil {

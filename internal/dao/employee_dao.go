@@ -75,3 +75,14 @@ func (m *EmployeeDao) EmployeePage(page int, pageSize int, name string) (respons
 	return employeePage, nil
 
 }
+
+func (m *EmployeeDao) EmployeeUpdate(updateMap map[string]interface{}) error {
+	// 1、获取id
+	id := updateMap["id"]
+
+	// 2、移除id
+	delete(updateMap, "id")
+
+	return m.Orm.Model(&pojo.Employee{}).Where("id = ?", id).Updates(updateMap).Error
+
+}

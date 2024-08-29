@@ -104,3 +104,30 @@ func (m *EmployeeService) EmployeePage(page int, pageSize int, name string) (res
 	return employeePage, response.SUCCESS()
 
 }
+
+func (m *EmployeeService) EmployeeUpdate(updateMap map[string]interface{}, employeeId int64) response.ResultCode {
+	// 1、判断是否有id
+	if _, ok := updateMap["id"]; !ok {
+		return response.PARAM_ERROR()
+	}
+
+	// 2、判断是否有密码，有的话进行md5加密
+	if password, ok := updateMap["password"]; ok {
+		updateMap["password"] = utils.MD5Hash(password.(string))
+	}
+
+	// 4、设置updateUser
+	updateMap["update_user"] = employeeId
+
+	// 5、设置updateTime
+	updateMap["update_time"] = time.Now()
+
+	// 2、调用dao层更新 员工信息
+	err := m.employeeDao.EmployeeUpdate(updateMap)
+
+	if err != nil {
+		return response.SERVER_ERROR()
+	}
+
+	return response.SUCCESS()
+}

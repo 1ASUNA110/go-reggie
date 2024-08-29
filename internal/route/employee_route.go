@@ -19,6 +19,8 @@ func SetupEmployeeRoutes(router *gin.Engine) {
 
 		employeeRoutes.POST("/", employeeApi.EmployeeSave)
 
+		employeeRoutes.PUT("/", employeeApi.EmployeeUpdate)
+
 	}
 
 }

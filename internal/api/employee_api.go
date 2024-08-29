@@ -119,5 +119,30 @@ func (m *EmployeeApi) EmployeePage(c *gin.Context) {
 	}
 
 	response.Fail(errorCode, c)
+}
+
+// EmployeeUpdate 更新员工信息
+func (m *EmployeeApi) EmployeeUpdate(c *gin.Context) {
+	// 1、校验请求参数
+	var requestMap map[string]interface{}
+
+	if err := c.BindJSON(&requestMap); err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 2、获取当前登录用户的ID
+	session := sessions.Default(c)
+	employeeID := session.Get("employee")
+
+	// 3、调用service层 更新员工信息
+	errorCode := m.employeeService.EmployeeUpdate(requestMap, employeeID.(int64))
+
+	if errorCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+
+	response.Fail(errorCode, c)
 
 }

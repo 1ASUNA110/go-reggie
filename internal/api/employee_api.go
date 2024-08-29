@@ -31,7 +31,7 @@ func (m *EmployeeApi) EmployeeLogin(c *gin.Context) {
 	// 1、校验请求参数
 	var EmployeeDto dto.EmployeeDto
 
-	// 验证码绑定失败 抛出参数错误异常
+	// 绑定失败 抛出参数错误异常
 	if err := c.ShouldBind(&EmployeeDto); err != nil {
 		response.Fail(response.PARAM_ERROR(), c)
 		return
@@ -68,7 +68,7 @@ func (m *EmployeeApi) EmployeeSave(c *gin.Context) {
 	// 1、校验请求参数
 	var employeeDto dto.EmployeeDto
 
-	// 验证码绑定失败 抛出参数错误异常
+	// 绑定失败 抛出参数错误异常
 	if err := c.ShouldBind(&employeeDto); err != nil {
 		response.Fail(response.PARAM_ERROR(), c)
 		return
@@ -145,4 +145,27 @@ func (m *EmployeeApi) EmployeeUpdate(c *gin.Context) {
 
 	response.Fail(errorCode, c)
 
+}
+
+// EmployeeGetById 根据ID查询员工信息
+func (m *EmployeeApi) EmployeeGetById(c *gin.Context) {
+	// 1、校验请求参数
+	idStr := c.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil || id <= 0 {
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 2、调用service层 根据ID查询员工信息
+	employee, errorCode := m.employeeService.EmployeeGetById(int64(id))
+
+	if errorCode.Code == response.SUCCESS().Code {
+		response.Ok(employee, c)
+		return
+	}
+
+	response.Fail(errorCode, c)
 }

@@ -105,15 +105,39 @@ func (m *EmployeeService) EmployeePage(page int, pageSize int, name string) (res
 
 }
 
-func (m *EmployeeService) EmployeeUpdate(updateMap map[string]interface{}, employeeId int64) response.ResultCode {
+func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, employeeId int64) response.ResultCode {
 	// 1、判断是否有id
-	if _, ok := updateMap["id"]; !ok {
+	if _, ok := requestMap["id"]; !ok {
 		return response.PARAM_ERROR()
 	}
 
-	// 2、判断是否有密码，有的话进行md5加密
-	if password, ok := updateMap["password"]; ok {
-		updateMap["password"] = utils.MD5Hash(password.(string))
+	// 2、创建updateMap
+	updateMap := make(map[string]interface{})
+	updateMap["id"] = requestMap["id"]
+	if _, ok := requestMap["password"]; ok {
+		updateMap["password"] = utils.MD5Hash(requestMap["password"].(string))
+	}
+	if _, ok := requestMap["idNumber"]; ok {
+		updateMap["id_number"] = requestMap["idNumber"]
+	}
+	if _, ok := requestMap["username"]; ok {
+		updateMap["username"] = requestMap["username"]
+	}
+
+	if _, ok := requestMap["name"]; ok {
+		updateMap["name"] = requestMap["name"]
+	}
+
+	if _, ok := requestMap["phone"]; ok {
+		updateMap["phone"] = requestMap["phone"]
+	}
+
+	if _, ok := requestMap["sex"]; ok {
+		updateMap["sex"] = requestMap["sex"]
+	}
+
+	if _, ok := requestMap["status"]; ok {
+		updateMap["status"] = requestMap["status"]
 	}
 
 	// 4、设置updateUser
@@ -130,4 +154,15 @@ func (m *EmployeeService) EmployeeUpdate(updateMap map[string]interface{}, emplo
 	}
 
 	return response.SUCCESS()
+}
+
+func (m *EmployeeService) EmployeeGetById(id int64) (pojo.Employee, response.ResultCode) {
+	employee, err := m.employeeDao.FindEmployeeById(id)
+
+	if err != nil {
+		return pojo.Employee{}, response.SERVER_ERROR()
+	}
+
+	return employee, response.SUCCESS()
+
 }

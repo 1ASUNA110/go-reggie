@@ -21,6 +21,8 @@ func SetupEmployeeRoutes(router *gin.Engine) {
 
 		employeeRoutes.PUT("/", employeeApi.EmployeeUpdate)
 
+		employeeRoutes.GET("/:id", employeeApi.EmployeeGetById)
+
 	}
 
 }

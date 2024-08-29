@@ -8,8 +8,8 @@ type Employee struct {
 	Password   string `json:"password" gorm:"size:64;not null;column:password"`        // 密码
 	Phone      string `json:"phone" gorm:"size:11;not null;column:phone"`              // 手机号
 	Sex        string `json:"sex" gorm:"size:2;not null;column:sex"`                   // 性别
-	IDNumber   string `json:"id_number" gorm:"size:18;not null;column:id_number"`      // 身份证号
+	IDNumber   string `json:"idNumber" gorm:"size:18;not null;column:id_number"`       // 身份证号
 	Status     int    `json:"status" gorm:"not null;default:1;column:status"`          // 状态 0:禁用，1:正常
-	CreateUser int64  `json:"create_user" gorm:"not null;column:create_user"`          // 创建人
-	UpdateUser int64  `json:"update_user" gorm:"not null;column:update_user"`          // 修改人
+	CreateUser int64  `json:"createUser" gorm:"not null;column:create_user"`           // 创建人
+	UpdateUser int64  `json:"updateUser" gorm:"not null;column:update_user"`           // 修改人
 }

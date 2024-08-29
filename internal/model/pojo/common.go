@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-// Common 包含所有模型共有的字段
+// BasePojo 包含所有模型共有的字段
 type BasePojo struct {
-	ID         int64     `json:"id,string" gorm:"primaryKey;column:id"`          // 主键
-	CreateTime time.Time `json:"create_time" gorm:"not null;column:create_time"` // 创建时间
-	UpdateTime time.Time `json:"update_time" gorm:"not null;column:update_time"` // 更新时间
+	ID         int64     `json:"id,string" gorm:"primaryKey;column:id"`               // 主键
+	CreateTime time.Time `json:"createTime" gorm:"autoCreateTime;column:create_time"` // 创建时间
+	UpdateTime time.Time `json:"updateTime" gorm:"autoUpdateTime;column:update_time"` // 更新时间
 }
 
 func (basePojo *BasePojo) BeforeCreate(tx *gorm.DB) (err error) {

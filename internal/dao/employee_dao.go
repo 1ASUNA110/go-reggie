@@ -67,9 +67,14 @@ func (m *EmployeeDao) EmployeePage(page int, pageSize int, name string) (respons
 
 	employeePage := response.Page{
 		Total:    total,
-		Records:  employees,
+		Records:  make([]interface{}, len(employees)),
 		Page:     int(page),
 		PageSize: int(pageSize),
+	}
+
+	// 将 employees 数据赋值给 Records
+	for i, employee := range employees {
+		employeePage.Records[i] = employee
 	}
 
 	return employeePage, nil

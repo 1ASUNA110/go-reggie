@@ -1,6 +1,6 @@
 package pojo
 
-// Employee 结构体表示数据库中的员工信息表
+// Employee 员工信息表
 type Employee struct {
 	BasePojo
 	Name       string `json:"name" gorm:"size:32;not null;column:name"`                // 姓名

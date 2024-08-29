@@ -6,7 +6,6 @@ import (
 	"go-reggie/internal/model/pojo"
 	"go-reggie/internal/utils"
 	"go-reggie/internal/utils/response"
-	"time"
 )
 
 var employeeService *EmployeeService
@@ -72,8 +71,8 @@ func (m *EmployeeService) EmployeeSave(employeeDto dto.EmployeeDto, createUser i
 	employee.Password = utils.MD5Hash(employeeDto.Password)
 
 	// 3、设置createTime 和 updateTime
-	employee.CreateTime = time.Now()
-	employee.UpdateTime = time.Now()
+	//employee.CreateTime = time.Now()
+	//employee.UpdateTime = time.Now()
 
 	// 3、查找用户名是否存在
 	employee1, err := m.employeeDao.FindEmployeeByUsername(employee.Username)
@@ -98,7 +97,16 @@ func (m *EmployeeService) EmployeePage(page int, pageSize int, name string) (res
 	employeePage, err := m.employeeDao.EmployeePage(page, pageSize, name)
 
 	if err != nil {
+
 		return response.Page{}, response.SERVER_ERROR()
+	}
+
+	// 遍历page 的records 然后删除里面的密码字段
+	for i := 0; i < len(employeePage.Records); i++ {
+		if employee, ok := employeePage.Records[i].(pojo.Employee); ok {
+			employee.Password = ""             // 清空密码
+			employeePage.Records[i] = employee // 将修改后的记录重新赋值回去
+		}
 	}
 
 	return employeePage, response.SUCCESS()
@@ -113,38 +121,20 @@ func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, empl
 
 	// 2、创建updateMap
 	updateMap := make(map[string]interface{})
-	updateMap["id"] = requestMap["id"]
-	if _, ok := requestMap["password"]; ok {
-		updateMap["password"] = utils.MD5Hash(requestMap["password"].(string))
-	}
-	if _, ok := requestMap["idNumber"]; ok {
-		updateMap["id_number"] = requestMap["idNumber"]
-	}
-	if _, ok := requestMap["username"]; ok {
-		updateMap["username"] = requestMap["username"]
+
+	for k, v := range requestMap {
+		snakeKey := utils.CamelToSnake(k)
+		updateMap[snakeKey] = v
 	}
 
-	if _, ok := requestMap["name"]; ok {
-		updateMap["name"] = requestMap["name"]
-	}
-
-	if _, ok := requestMap["phone"]; ok {
-		updateMap["phone"] = requestMap["phone"]
-	}
-
-	if _, ok := requestMap["sex"]; ok {
-		updateMap["sex"] = requestMap["sex"]
-	}
-
-	if _, ok := requestMap["status"]; ok {
-		updateMap["status"] = requestMap["status"]
-	}
+	// 3、移除password
+	delete(updateMap, "password")
 
 	// 4、设置updateUser
 	updateMap["update_user"] = employeeId
 
 	// 5、设置updateTime
-	updateMap["update_time"] = time.Now()
+	//updateMap["update_time"] = time.Now()
 
 	// 6、调用dao层更新 员工信息
 	err := m.employeeDao.EmployeeUpdate(updateMap)
@@ -159,10 +149,13 @@ func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, empl
 func (m *EmployeeService) EmployeeGetById(id int64) (pojo.Employee, response.ResultCode) {
 	employee, err := m.employeeDao.FindEmployeeById(id)
 
+	employee.Password = ""
+
 	if err != nil {
 		return pojo.Employee{}, response.SERVER_ERROR()
 	}
 
+	// 5、返回成功结果
 	return employee, response.SUCCESS()
 
 }

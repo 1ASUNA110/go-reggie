@@ -83,3 +83,23 @@ func (m *CategoryApi) CategoryPage(c *gin.Context) {
 	response.Fail(resultCode, c)
 
 }
+
+// CategoryDelete 删除分类
+func (m *CategoryApi) CategoryDelete(c *gin.Context) {
+	// 1、校验请求参数
+	idStr := c.Query("ids")
+	fmt.Println(idStr)
+	// 将字符串转换为整数
+	id, _ := strconv.Atoi(idStr)
+	fmt.Println(id)
+
+	// 2、调用service层 删除分类
+	resultCode := m.categoryService.CategoryDelete(int64(id))
+
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+	response.Fail(resultCode, c)
+
+}

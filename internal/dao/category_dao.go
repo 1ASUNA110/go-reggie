@@ -56,3 +56,7 @@ func (m CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error)
 	return categoryPage, nil
 
 }
+
+func (m CategoryDao) CategoryDelete(id int64) error {
+	return m.Orm.Delete(pojo.Category{}, id).Error
+}

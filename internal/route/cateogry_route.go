@@ -15,6 +15,7 @@ func SetupCategoryRoutes(router *gin.Engine) {
 
 		categoryRoutes.GET("/page", categoryApi.CategoryPage)
 
+		categoryRoutes.DELETE("/", categoryApi.CategoryDelete)
 	}
 
 }

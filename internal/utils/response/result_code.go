@@ -28,3 +28,5 @@ func User_DISABLED_ERROR() ResultCode {
 func LOGIN_CHECK_ERROR() ResultCode { return ResultCode{Code: 5, Msg: "未登录"} }
 
 func USER_IS_EXIST() ResultCode { return ResultCode{Code: 6, Msg: "用户已存在"} }
+
+func ERROR_CATEGORY_BE_RELATED() ResultCode { return ResultCode{Code: 7, Msg: "分类已关联"} }

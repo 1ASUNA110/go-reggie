@@ -5,6 +5,7 @@ import (
 	"go-reggie/internal/model/dto"
 	"go-reggie/internal/model/pojo"
 	"go-reggie/internal/utils/response"
+	"strconv"
 )
 
 type CategoryService struct {
@@ -75,6 +76,36 @@ func (m CategoryService) CategoryDelete(ID int64) response.ResultCode {
 
 	// 2、调用dao层删除分类
 	err = m.categoryDao.CategoryDelete(ID)
+
+	if err != nil {
+		return response.SERVER_ERROR()
+	}
+
+	return response.SUCCESS()
+
+}
+
+func (m CategoryService) CategoryUpdate(requestMap map[string]interface{}, employeeId int64) response.ResultCode {
+	// 0、校验请求参数
+	// 0.1、校验ID是否为空
+	idStr, ok := requestMap["id"].(string)
+	if !ok {
+		return response.PARAM_ERROR()
+	}
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		return response.PARAM_ERROR()
+	}
+
+	// 1、构建updateMap
+	updateMap := map[string]interface{}{
+		"name":        requestMap["name"],
+		"sort":        requestMap["sort"],
+		"update_user": employeeId,
+	}
+
+	// 2、调用dao层更新分类
+	err = m.categoryDao.CategoryUpdateById(id, updateMap)
 
 	if err != nil {
 		return response.SERVER_ERROR()

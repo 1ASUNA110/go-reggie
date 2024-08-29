@@ -103,3 +103,28 @@ func (m *CategoryApi) CategoryDelete(c *gin.Context) {
 	response.Fail(resultCode, c)
 
 }
+
+// CategoryUpdate 更新分类
+func (m *CategoryApi) CategoryUpdate(c *gin.Context) {
+	// 1、校验请求参数
+	var requestMap map[string]interface{}
+
+	if err := c.BindJSON(&requestMap); err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 2、获取当前登录用户的ID
+	session := sessions.Default(c)
+	employeeID := session.Get("employee")
+
+	// 3、调用service层 更新分类信息
+	resultCode := m.categoryService.CategoryUpdate(requestMap, employeeID.(int64))
+
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+	response.Fail(resultCode, c)
+
+}

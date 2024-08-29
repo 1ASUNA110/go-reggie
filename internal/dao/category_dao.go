@@ -60,3 +60,8 @@ func (m CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error)
 func (m CategoryDao) CategoryDelete(id int64) error {
 	return m.Orm.Delete(pojo.Category{}, id).Error
 }
+
+// 根据分类ID修改分类信息
+func (m CategoryDao) CategoryUpdateById(id int64, updateMap map[string]interface{}) error {
+	return m.Orm.Model(&pojo.Category{}).Where("id = ?", id).Updates(updateMap).Error
+}

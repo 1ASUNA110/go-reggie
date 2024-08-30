@@ -1,7 +1,7 @@
 package pojo
 
 type DishVo struct {
-	ID          int64   `json:"id"`
+	ID          int64   `json:"id,string"`
 	Name        string  `json:"name"`
 	CategoryID  int64   `json:"categoryId"`
 	Price       float64 `json:"price,omitempty"`

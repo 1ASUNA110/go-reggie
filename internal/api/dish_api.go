@@ -78,3 +78,33 @@ func (m *DishApi) DishDelete(c *gin.Context) {
 
 	response.Fail(resultCode, c)
 }
+
+// DishUpdateStatus 更新菜品状态
+func (m *DishApi) DishUpdateStatus(c *gin.Context) {
+	// 1、获取菜品id
+	statusStr := c.Param("status")
+	status, err := strconv.Atoi(statusStr)
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 2、获取状态
+	idsStr := c.Query("ids")
+	ids, err := strconv.ParseInt(idsStr, 10, 64)
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 3、调用service层 更新菜品状态
+	resultCode := m.dishService.DishUpdateStatus(ids, status)
+
+	// 4、返回响应
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+
+	response.Fail(resultCode, c)
+}

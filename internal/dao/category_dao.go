@@ -66,9 +66,5 @@ func (m *CategoryDao) CategoryGetById(id int64) (pojo.Category, error) {
 
 	err := m.Orm.Where("id = ?", id).First(&category).Error
 
-	if err != nil {
-		return category, err
-	}
-
-	return category, nil
+	return category, err
 }

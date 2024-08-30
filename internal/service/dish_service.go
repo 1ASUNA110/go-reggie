@@ -82,3 +82,16 @@ func (m *DishService) DishDelete(id int64) response.ResultCode {
 	return response.SUCCESS()
 
 }
+
+func (m *DishService) DishUpdateStatus(id int64, status int) response.ResultCode {
+
+	// 1、调用dao层
+	err := m.dishDao.DishUpdateStatus(id, status)
+
+	if err != nil {
+		return response.SERVER_ERROR()
+	}
+
+	return response.SUCCESS()
+
+}

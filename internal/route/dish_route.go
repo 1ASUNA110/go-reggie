@@ -12,6 +12,10 @@ func SetupDishRoutes(router *gin.Engine) {
 	categoryRoutes := router.Group("/dish")
 	{
 		categoryRoutes.GET("/page", dishApi.DishPage)
+
+		categoryRoutes.POST("/status/:status", dishApi.DishUpdateStatus)
+
+		categoryRoutes.DELETE("/", dishApi.DishDelete)
 	}
 
 }

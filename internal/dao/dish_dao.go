@@ -46,7 +46,7 @@ func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page[p
 
 	// 执行分页查询
 	var dishes []pojo.Dish
-	query.Offset(offset).Limit(pageSize).Order("update_time ASC").Find(&dishes)
+	query.Offset(offset).Limit(pageSize).Order("update_time DESC").Find(&dishes)
 
 	// 获取总记录数
 	var total int64
@@ -67,6 +67,12 @@ func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page[p
 	return dishPage, nil
 }
 
+// DishSave 菜品保存
 func (m *DishDao) DishDelete(id int64) error {
 	return m.Orm.Where("id = ?", id).Delete(pojo.Dish{}).Error
+}
+
+// DishUpdateStatus 菜品状态更新
+func (m *DishDao) DishUpdateStatus(id int64, status int) interface{} {
+	return m.Orm.Model(pojo.Dish{}).Where("id = ?", id).Update("status", status).Error
 }

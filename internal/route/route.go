@@ -8,5 +8,6 @@ func SetupRouter(router *gin.Engine) {
 	SetupEmployeeRoutes(router)
 	SetupCategoryRoutes(router)
 	SetupUploadRoutes(router)
+	SetupDishRoutes(router)
 
 }

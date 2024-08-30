@@ -45,19 +45,19 @@ docker run  -p 9000:9000  -p 9001:9001  --name minio  -d --restart=always -e "MI
 > 注意：这里的MINIO_ROOT_USER和MINIO_ROOT_PASSWORD是minio的账号和密码，可以自行修改，但是需要和配置文件中的配置一致。
 
 安装完成后访问 http://localhost:9001 即可
-![img.png](img.png)
+![img.png](assets/img.png)
 > 不同版本可能界面不一样，但是功能是一样的。
 
 ### minio的配置
 1. 创建一个bucket，名字为reggie，这个bucket的名字需要和配置文件中的配置一致。
-![img_1.png](img_1.png)
+![img_1.png](assets/img_1.png)
 
 2. 设置bucket的权限为public，这样我们就可以通过url访问到图片了。
-![img_2.png](img_2.png)
+![img_2.png](assets/img_2.png)
 
 3. 创建一个文件夹，名字为 images ,并将图片资源上传
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
+![img_3.png](assets/img_3.png)
+![img_4.png](assets/img_4.png)
 
 4. 测试是否可以访问
 如果你完全按照我的步骤的话，浏览器访问

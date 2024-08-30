@@ -48,7 +48,7 @@ func (m CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error)
 		PageSize: int(pageSize),
 	}
 
-	// 将 employees 数据赋值给 Records
+	// 将 categories 数据赋值给 Records
 	for i, category := range categories {
 		categoryPage.Records[i] = category
 	}

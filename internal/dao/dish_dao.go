@@ -33,7 +33,7 @@ func (m *DishDao) DishCountByCategoryId(categoryId int64) (int64, error) {
 	return count, nil
 }
 
-func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page, error) {
+func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page[pojo.Dish], error) {
 	// 计算偏移量
 	offset := (page - 1) * pageSize
 
@@ -52,11 +52,11 @@ func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page, 
 	var total int64
 	query.Model(&pojo.Dish{}).Count(&total)
 
-	dishPage := response.Page{
+	dishPage := response.Page[pojo.Dish]{
 		Total:    total,
-		Records:  make([]interface{}, len(dishes)),
-		Page:     int(page),
-		PageSize: int(pageSize),
+		Records:  dishes,
+		Page:     page,
+		PageSize: pageSize,
 	}
 
 	// 将 dishes 数据赋值给 Records
@@ -65,4 +65,8 @@ func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page, 
 	}
 
 	return dishPage, nil
+}
+
+func (m *DishDao) DishDelete(id int64) error {
+	return m.Orm.Where("id = ?", id).Delete(pojo.Dish{}).Error
 }

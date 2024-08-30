@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	response2 "go-reggie/internal/model/vo/response"
+	"go-reggie/internal/model/vo/response"
 	"regexp"
 )
 
@@ -42,7 +42,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// 4、如果未登录,则返回未登录结果
-		response2.Fail(response2.LOGIN_CHECK_ERROR(), c)
+		response.Fail(response.LOGIN_CHECK_ERROR(), c)
 		c.Abort()
 
 	}

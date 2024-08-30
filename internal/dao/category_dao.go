@@ -25,7 +25,7 @@ func (m *CategoryDao) CategorySave(category pojo.Category) error {
 	return m.Orm.Create(&category).Error
 }
 
-func (m *CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error) {
+func (m *CategoryDao) CategoryPage(page int, pageSize int) (response.Page[pojo.Category], error) {
 
 	// 计算偏移量
 	offset := (page - 1) * pageSize
@@ -41,16 +41,11 @@ func (m *CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error
 	var total int64
 	query.Model(&pojo.Category{}).Count(&total)
 
-	categoryPage := response.Page{
+	categoryPage := response.Page[pojo.Category]{
 		Total:    total,
-		Records:  make([]interface{}, len(categories)),
+		Records:  categories,
 		Page:     int(page),
 		PageSize: int(pageSize),
-	}
-
-	// 将 categories 数据赋值给 Records
-	for i, category := range categories {
-		categoryPage.Records[i] = category
 	}
 
 	return categoryPage, nil
@@ -64,4 +59,16 @@ func (m *CategoryDao) CategoryDelete(id int64) error {
 // 根据分类ID修改分类信息
 func (m *CategoryDao) CategoryUpdateById(id int64, updateMap map[string]interface{}) error {
 	return m.Orm.Model(&pojo.Category{}).Where("id = ?", id).Updates(updateMap).Error
+}
+
+func (m *CategoryDao) CategoryGetById(id int64) (pojo.Category, error) {
+	var category pojo.Category
+
+	err := m.Orm.Where("id = ?", id).First(&category).Error
+
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
 }

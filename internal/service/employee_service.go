@@ -4,7 +4,7 @@ import (
 	"go-reggie/internal/dao"
 	"go-reggie/internal/model/dto"
 	"go-reggie/internal/model/pojo"
-	response2 "go-reggie/internal/model/vo/response"
+	"go-reggie/internal/model/vo/response"
 	"go-reggie/internal/utils"
 )
 
@@ -24,7 +24,7 @@ func NewEmployeeService() *EmployeeService {
 	return employeeService
 }
 
-func (m *EmployeeService) Login(EmployeeDto dto.EmployeeDto) (pojo.Employee, response2.ResultCode) {
+func (m *EmployeeService) Login(EmployeeDto dto.EmployeeDto) (pojo.Employee, response.ResultCode) {
 	// 1、将页面提交的密码password进行md5加密处理
 	password := utils.MD5Hash(EmployeeDto.Password)
 
@@ -37,19 +37,19 @@ func (m *EmployeeService) Login(EmployeeDto dto.EmployeeDto) (pojo.Employee, res
 
 	// 3、如果没有查询到则返回登录失败结果
 	if employee.ID == 0 {
-		return employee, response2.USER_LOGIN_ERROR()
+		return employee, response.USER_LOGIN_ERROR()
 	}
 
 	// 4、查看员工状态，如果为已禁用状态，则返回员工已禁用结果
 	if employee.Status == 0 {
-		return employee, response2.User_DISABLED_ERROR()
+		return employee, response.User_DISABLED_ERROR()
 	}
 
 	// 5、登录成功，返回成功结果
-	return employee, response2.SUCCESS()
+	return employee, response.SUCCESS()
 }
 
-func (m *EmployeeService) EmployeeSave(employeeDto dto.EmployeeDto, createUser int64) response2.ResultCode {
+func (m *EmployeeService) EmployeeSave(employeeDto dto.EmployeeDto, createUser int64) response.ResultCode {
 	// 1、创建employee对象
 	employee := pojo.Employee{
 		Username:   employeeDto.UserName,
@@ -77,46 +77,44 @@ func (m *EmployeeService) EmployeeSave(employeeDto dto.EmployeeDto, createUser i
 	// 3、查找用户名是否存在
 	employee1, err := m.employeeDao.FindEmployeeByUsername(employee.Username)
 	if err == nil && employee1.ID != 0 {
-		return response2.USER_IS_EXIST()
+		return response.USER_IS_EXIST()
 	}
 
 	// 3、调用dao层保存
 	err = m.employeeDao.EmployeeSave(&employee)
 
 	if err != nil {
-		return response2.SERVER_ERROR()
+		return response.SERVER_ERROR()
 	}
 
-	return response2.SUCCESS()
+	return response.SUCCESS()
 
 }
 
-func (m *EmployeeService) EmployeePage(page int, pageSize int, name string) (response2.Page, response2.ResultCode) {
+func (m *EmployeeService) EmployeePage(page int, pageSize int, name string) (response.Page[pojo.Employee], response.ResultCode) {
 
-	// 3、查询数据库
+	// 1、查询数据库
 	employeePage, err := m.employeeDao.EmployeePage(page, pageSize, name)
 
 	if err != nil {
-
-		return response2.Page{}, response2.SERVER_ERROR()
+		return response.Page[pojo.Employee]{}, response.SERVER_ERROR()
 	}
 
-	// 遍历page 的records 然后删除里面的密码字段
+	// 2、遍历page 的records 然后删除里面的密码字段
 	for i := 0; i < len(employeePage.Records); i++ {
-		if employee, ok := employeePage.Records[i].(pojo.Employee); ok {
-			employee.Password = ""             // 清空密码
-			employeePage.Records[i] = employee // 将修改后的记录重新赋值回去
-		}
+		employee := employeePage.Records[i]
+		employee.Password = ""             // 清空密码
+		employeePage.Records[i] = employee // 将修改后的记录重新赋值回去
 	}
 
-	return employeePage, response2.SUCCESS()
+	return employeePage, response.SUCCESS()
 
 }
 
-func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, employeeId int64) response2.ResultCode {
+func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, employeeId int64) response.ResultCode {
 	// 1、判断是否有id
 	if _, ok := requestMap["id"]; !ok {
-		return response2.PARAM_ERROR()
+		return response.PARAM_ERROR()
 	}
 
 	// 2、创建updateMap
@@ -140,22 +138,22 @@ func (m *EmployeeService) EmployeeUpdate(requestMap map[string]interface{}, empl
 	err := m.employeeDao.EmployeeUpdate(updateMap)
 
 	if err != nil {
-		return response2.SERVER_ERROR()
+		return response.SERVER_ERROR()
 	}
 
-	return response2.SUCCESS()
+	return response.SUCCESS()
 }
 
-func (m *EmployeeService) EmployeeGetById(id int64) (pojo.Employee, response2.ResultCode) {
+func (m *EmployeeService) EmployeeGetById(id int64) (pojo.Employee, response.ResultCode) {
 	employee, err := m.employeeDao.FindEmployeeById(id)
 
 	employee.Password = ""
 
 	if err != nil {
-		return pojo.Employee{}, response2.SERVER_ERROR()
+		return pojo.Employee{}, response.SERVER_ERROR()
 	}
 
 	// 5、返回成功结果
-	return employee, response2.SUCCESS()
+	return employee, response.SUCCESS()
 
 }

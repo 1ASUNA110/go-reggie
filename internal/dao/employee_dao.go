@@ -46,7 +46,7 @@ func (m *EmployeeDao) FindEmployeeByUsername(username string) (pojo.Employee, er
 	return employee, err
 }
 
-func (m *EmployeeDao) EmployeePage(page int, pageSize int, name string) (response.Page, error) {
+func (m *EmployeeDao) EmployeePage(page int, pageSize int, name string) (response.Page[pojo.Employee], error) {
 	// 计算偏移量
 	offset := (page - 1) * pageSize
 
@@ -65,9 +65,9 @@ func (m *EmployeeDao) EmployeePage(page int, pageSize int, name string) (respons
 	var total int64
 	query.Model(&pojo.Employee{}).Count(&total)
 
-	employeePage := response.Page{
+	employeePage := response.Page[pojo.Employee]{
 		Total:    total,
-		Records:  make([]interface{}, len(employees)),
+		Records:  employees,
 		Page:     int(page),
 		PageSize: int(pageSize),
 	}

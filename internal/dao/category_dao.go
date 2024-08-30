@@ -2,7 +2,7 @@ package dao
 
 import (
 	"go-reggie/internal/model/pojo"
-	"go-reggie/internal/utils/response"
+	"go-reggie/internal/model/vo/response"
 )
 
 type CategoryDao struct {
@@ -21,11 +21,11 @@ func NewCategoryDao() *CategoryDao {
 	return categoryDao
 }
 
-func (m CategoryDao) CategorySave(category pojo.Category) error {
+func (m *CategoryDao) CategorySave(category pojo.Category) error {
 	return m.Orm.Create(&category).Error
 }
 
-func (m CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error) {
+func (m *CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error) {
 
 	// 计算偏移量
 	offset := (page - 1) * pageSize
@@ -57,11 +57,11 @@ func (m CategoryDao) CategoryPage(page int, pageSize int) (response.Page, error)
 
 }
 
-func (m CategoryDao) CategoryDelete(id int64) error {
+func (m *CategoryDao) CategoryDelete(id int64) error {
 	return m.Orm.Delete(pojo.Category{}, id).Error
 }
 
 // 根据分类ID修改分类信息
-func (m CategoryDao) CategoryUpdateById(id int64, updateMap map[string]interface{}) error {
+func (m *CategoryDao) CategoryUpdateById(id int64, updateMap map[string]interface{}) error {
 	return m.Orm.Model(&pojo.Category{}).Where("id = ?", id).Updates(updateMap).Error
 }

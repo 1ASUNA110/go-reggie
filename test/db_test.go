@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"go-reggie/config"
-	"go-reggie/internal/bootstrap"
+	"go-reggie/internal/db"
 	"go-reggie/internal/model/pojo"
 	"os"
 	"testing"
@@ -17,7 +17,7 @@ func TestDb(t *testing.T) {
 
 	// 测试数据库连接
 	// 连接数据库
-	db, err := bootstrap.InitDB()
+	db, err := db.InitDB()
 
 	if err != nil {
 		panic(err)

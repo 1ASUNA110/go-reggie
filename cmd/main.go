@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go-reggie/config"
-	"go-reggie/internal/bootstrap"
+	"go-reggie/internal/db"
 	"go-reggie/internal/global"
 	"go-reggie/internal/middleware"
 	"go-reggie/internal/route"
@@ -40,10 +40,10 @@ func main() {
 	r.Use(middleware.AuthMiddleware())
 
 	// 提供静态文件服务
-	r.Static("/static", "./static")
+	r.Static("/static", "./web/static")
 
 	//从内部包中初始化数据库
-	db, err := bootstrap.InitDB()
+	db, err := db.InitDB()
 
 	if err != nil {
 		panic(err)

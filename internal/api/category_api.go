@@ -5,8 +5,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-reggie/internal/model/dto"
+	response2 "go-reggie/internal/model/vo/response"
 	"go-reggie/internal/service"
-	"go-reggie/internal/utils/response"
 	"strconv"
 )
 
@@ -34,7 +34,7 @@ func (m *CategoryApi) CategorySave(c *gin.Context) {
 	// 绑定失败 抛出参数错误异常
 	if err := c.ShouldBind(&categoryDto); err != nil {
 		fmt.Println(err)
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
@@ -46,12 +46,12 @@ func (m *CategoryApi) CategorySave(c *gin.Context) {
 	resultCode := m.categoryService.CategorySave(categoryDto, employeeId)
 
 	// 4、返回响应
-	if resultCode.Code == response.SUCCESS().Code {
-		response.Ok(nil, c)
+	if resultCode.Code == response2.SUCCESS().Code {
+		response2.Ok(nil, c)
 		return
 	}
 
-	response.Fail(resultCode, c)
+	response2.Fail(resultCode, c)
 }
 
 // CategoryPage 分类分页查询
@@ -75,12 +75,12 @@ func (m *CategoryApi) CategoryPage(c *gin.Context) {
 	// 3、调用service层 分页查询分类信息
 	categoryPage, resultCode := m.categoryService.CategoryPage(page, pageSize)
 
-	if resultCode.Code == response.SUCCESS().Code {
-		response.Ok(categoryPage, c)
+	if resultCode.Code == response2.SUCCESS().Code {
+		response2.Ok(categoryPage, c)
 		return
 	}
 
-	response.Fail(resultCode, c)
+	response2.Fail(resultCode, c)
 
 }
 
@@ -96,11 +96,11 @@ func (m *CategoryApi) CategoryDelete(c *gin.Context) {
 	// 2、调用service层 删除分类
 	resultCode := m.categoryService.CategoryDelete(int64(id))
 
-	if resultCode.Code == response.SUCCESS().Code {
-		response.Ok(nil, c)
+	if resultCode.Code == response2.SUCCESS().Code {
+		response2.Ok(nil, c)
 		return
 	}
-	response.Fail(resultCode, c)
+	response2.Fail(resultCode, c)
 
 }
 
@@ -110,7 +110,7 @@ func (m *CategoryApi) CategoryUpdate(c *gin.Context) {
 	var requestMap map[string]interface{}
 
 	if err := c.BindJSON(&requestMap); err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
@@ -121,10 +121,10 @@ func (m *CategoryApi) CategoryUpdate(c *gin.Context) {
 	// 3、调用service层 更新分类信息
 	resultCode := m.categoryService.CategoryUpdate(requestMap, employeeID.(int64))
 
-	if resultCode.Code == response.SUCCESS().Code {
-		response.Ok(nil, c)
+	if resultCode.Code == response2.SUCCESS().Code {
+		response2.Ok(nil, c)
 		return
 	}
-	response.Fail(resultCode, c)
+	response2.Fail(resultCode, c)
 
 }

@@ -2,7 +2,7 @@ package dao
 
 import (
 	"go-reggie/internal/model/pojo"
-	"go-reggie/internal/utils/response"
+	"go-reggie/internal/model/vo/response"
 )
 
 type DishDao struct {
@@ -21,7 +21,7 @@ func NewDishDao() *DishDao {
 	return dishDao
 }
 
-func (m DishDao) DishCountByCategoryId(categoryId int64) (int64, error) {
+func (m *DishDao) DishCountByCategoryId(categoryId int64) (int64, error) {
 	var count int64
 
 	err := m.Orm.Table("dish").Where("category_id = ?", categoryId).Count(&count).Error
@@ -33,7 +33,7 @@ func (m DishDao) DishCountByCategoryId(categoryId int64) (int64, error) {
 	return count, nil
 }
 
-func (m DishDao) DishPage(page int, pageSize int, name string) (response.Page, error) {
+func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page, error) {
 	// 计算偏移量
 	offset := (page - 1) * pageSize
 

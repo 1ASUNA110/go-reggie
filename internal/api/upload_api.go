@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"go-reggie/internal/utils/response"
+	response2 "go-reggie/internal/model/vo/response"
 	"path/filepath"
 )
 
@@ -26,7 +26,7 @@ func (m *UploadApi) Upload(c *gin.Context) {
 
 	if err != nil {
 
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
@@ -35,7 +35,7 @@ func (m *UploadApi) Upload(c *gin.Context) {
 	contentType := file.Header.Get("Content-Type")
 
 	if contentType != "image/jpeg" && contentType != "image/png" {
-		response.Fail(response.UOLOAD_FILE_TYPE_ERROR(), c)
+		response2.Fail(response2.UOLOAD_FILE_TYPE_ERROR(), c)
 		return
 	}
 
@@ -49,5 +49,5 @@ func (m *UploadApi) Upload(c *gin.Context) {
 	// todo
 
 	// 6、返回响应
-	response.Ok(fileName, c)
+	response2.Ok(fileName, c)
 }

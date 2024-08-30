@@ -2,8 +2,8 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	response2 "go-reggie/internal/model/vo/response"
 	"go-reggie/internal/service"
-	"go-reggie/internal/utils/response"
 	"strconv"
 )
 
@@ -46,11 +46,11 @@ func (m *DishApi) DishPage(c *gin.Context) {
 	// 3、调用service层 分页查询菜品
 	dishPage, resultCode := m.dishService.DishPage(page, pageSize, name)
 
-	if resultCode.Code == response.SUCCESS().Code {
-		response.Ok(dishPage, c)
+	if resultCode.Code == response2.SUCCESS().Code {
+		response2.Ok(dishPage, c)
 		return
 	}
 
-	response.Fail(resultCode, c)
+	response2.Fail(resultCode, c)
 
 }

@@ -4,8 +4,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-reggie/internal/model/dto"
+	response2 "go-reggie/internal/model/vo/response"
 	"go-reggie/internal/service"
-	"go-reggie/internal/utils/response"
 	"strconv"
 )
 
@@ -33,7 +33,7 @@ func (m *EmployeeApi) EmployeeLogin(c *gin.Context) {
 
 	// 绑定失败 抛出参数错误异常
 	if err := c.ShouldBind(&EmployeeDto); err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
@@ -41,7 +41,7 @@ func (m *EmployeeApi) EmployeeLogin(c *gin.Context) {
 	employee, errorCode := m.employeeService.Login(EmployeeDto)
 
 	// 3、返回响应
-	if errorCode.Code == response.SUCCESS().Code {
+	if errorCode.Code == response2.SUCCESS().Code {
 
 		session := sessions.Default(c)
 		session.Set("employee", employee.ID)
@@ -49,9 +49,9 @@ func (m *EmployeeApi) EmployeeLogin(c *gin.Context) {
 		// 保存session
 		session.Save()
 
-		response.Ok(employee, c)
+		response2.Ok(employee, c)
 	} else {
-		response.Fail(errorCode, c)
+		response2.Fail(errorCode, c)
 	}
 }
 
@@ -60,7 +60,7 @@ func (m *EmployeeApi) EmployeeLogout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
 	session.Save()
-	response.Ok(nil, c)
+	response2.Ok(nil, c)
 }
 
 // EmployeeSave 新增员工
@@ -70,7 +70,7 @@ func (m *EmployeeApi) EmployeeSave(c *gin.Context) {
 
 	// 绑定失败 抛出参数错误异常
 	if err := c.ShouldBind(&employeeDto); err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
@@ -81,12 +81,12 @@ func (m *EmployeeApi) EmployeeSave(c *gin.Context) {
 	// 3、调用service层 保存员工信息
 	errorCode := m.employeeService.EmployeeSave(employeeDto, employeeID.(int64))
 
-	if errorCode.Code == response.SUCCESS().Code {
-		response.Ok(nil, c)
+	if errorCode.Code == response2.SUCCESS().Code {
+		response2.Ok(nil, c)
 		return
 	}
 
-	response.Fail(errorCode, c)
+	response2.Fail(errorCode, c)
 }
 
 // EmployeePage 员工分页查询
@@ -113,12 +113,12 @@ func (m *EmployeeApi) EmployeePage(c *gin.Context) {
 	// 3、调用service层 分页查询员工信息
 	employeePage, errorCode := m.employeeService.EmployeePage(page, pageSize, name)
 
-	if errorCode.Code == response.SUCCESS().Code {
-		response.Ok(employeePage, c)
+	if errorCode.Code == response2.SUCCESS().Code {
+		response2.Ok(employeePage, c)
 		return
 	}
 
-	response.Fail(errorCode, c)
+	response2.Fail(errorCode, c)
 }
 
 // EmployeeUpdate 更新员工信息
@@ -127,7 +127,7 @@ func (m *EmployeeApi) EmployeeUpdate(c *gin.Context) {
 	var requestMap map[string]interface{}
 
 	if err := c.BindJSON(&requestMap); err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
@@ -138,12 +138,12 @@ func (m *EmployeeApi) EmployeeUpdate(c *gin.Context) {
 	// 3、调用service层 更新员工信息
 	errorCode := m.employeeService.EmployeeUpdate(requestMap, employeeID.(int64))
 
-	if errorCode.Code == response.SUCCESS().Code {
-		response.Ok(nil, c)
+	if errorCode.Code == response2.SUCCESS().Code {
+		response2.Ok(nil, c)
 		return
 	}
 
-	response.Fail(errorCode, c)
+	response2.Fail(errorCode, c)
 
 }
 
@@ -155,17 +155,17 @@ func (m *EmployeeApi) EmployeeGetById(c *gin.Context) {
 	id, err := strconv.Atoi(idStr)
 
 	if err != nil || id <= 0 {
-		response.Fail(response.PARAM_ERROR(), c)
+		response2.Fail(response2.PARAM_ERROR(), c)
 		return
 	}
 
 	// 2、调用service层 根据ID查询员工信息
 	employee, errorCode := m.employeeService.EmployeeGetById(int64(id))
 
-	if errorCode.Code == response.SUCCESS().Code {
-		response.Ok(employee, c)
+	if errorCode.Code == response2.SUCCESS().Code {
+		response2.Ok(employee, c)
 		return
 	}
 
-	response.Fail(errorCode, c)
+	response2.Fail(errorCode, c)
 }

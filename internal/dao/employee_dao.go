@@ -2,7 +2,7 @@ package dao
 
 import (
 	"go-reggie/internal/model/pojo"
-	"go-reggie/internal/utils/response"
+	"go-reggie/internal/model/vo/response"
 )
 
 var employeeDao *EmployeeDao

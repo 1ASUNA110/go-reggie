@@ -68,3 +68,12 @@ func (m *CategoryDao) CategoryGetById(id int64) (pojo.Category, error) {
 
 	return category, err
 }
+
+func (m *CategoryDao) CategoryList(categoryType int) ([]pojo.Category, error) {
+	var categories []pojo.Category
+
+	err := m.Orm.Where("type = ?", categoryType).Find(&categories).Error
+
+	return categories, err
+
+}

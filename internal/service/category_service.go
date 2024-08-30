@@ -114,3 +114,16 @@ func (m *CategoryService) CategoryUpdate(requestMap map[string]interface{}, empl
 	return response.SUCCESS()
 
 }
+
+func (m *CategoryService) CategoryList(categoryType int) ([]pojo.Category, response.ResultCode) {
+
+	// 1、调用dao层查询分类列表
+	categoryList, err := m.categoryDao.CategoryList(categoryType)
+
+	if err != nil {
+		return nil, response.SERVER_ERROR()
+	}
+
+	return categoryList, response.SUCCESS()
+
+}

@@ -88,10 +88,8 @@ func (m *CategoryApi) CategoryPage(c *gin.Context) {
 func (m *CategoryApi) CategoryDelete(c *gin.Context) {
 	// 1、校验请求参数
 	idStr := c.Query("ids")
-	fmt.Println(idStr)
 	// 将字符串转换为整数
 	id, _ := strconv.Atoi(idStr)
-	fmt.Println(id)
 
 	// 2、调用service层 删除分类
 	resultCode := m.categoryService.CategoryDelete(int64(id))
@@ -123,6 +121,24 @@ func (m *CategoryApi) CategoryUpdate(c *gin.Context) {
 
 	if resultCode.Code == response.SUCCESS().Code {
 		response.Ok(nil, c)
+		return
+	}
+	response.Fail(resultCode, c)
+
+}
+
+// CategoryList 分类列表
+func (m *CategoryApi) CategoryList(c *gin.Context) {
+
+	// 1、获取参数
+	categoryTypeStr := c.Query("type")
+	categoryType, _ := strconv.Atoi(categoryTypeStr)
+
+	// 2、调用service层 查询分类列表
+	categoryList, resultCode := m.categoryService.CategoryList(categoryType)
+
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(categoryList, c)
 		return
 	}
 	response.Fail(resultCode, c)

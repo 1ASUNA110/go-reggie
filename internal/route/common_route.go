@@ -12,6 +12,7 @@ func SetupCommonRoutes(router *gin.Engine) {
 	employeeRoutes := router.Group("/common")
 	{
 		employeeRoutes.POST("/upload", uploadApi.FileUpload)
+
 		employeeRoutes.GET("/download", uploadApi.FileDownload)
 
 	}

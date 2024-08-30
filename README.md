@@ -25,6 +25,12 @@ go get github.com/sony/sonyflake
 
 # 安装 uuid 库
 go get github.com/google/uuid
+
+# 安装 minio SDK
+go get github.com/minio/minio-go/v7
+
+# 安装 copier
+go get github.com/jinzhu/copier
 ~~~
 
 

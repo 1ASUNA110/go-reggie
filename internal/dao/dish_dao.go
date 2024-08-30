@@ -24,7 +24,7 @@ func NewDishDao() *DishDao {
 func (m *DishDao) DishCountByCategoryId(categoryId int64) (int64, error) {
 	var count int64
 
-	err := m.Orm.Table("dish").Where("category_id = ?", categoryId).Count(&count).Error
+	err := m.Orm.Model(pojo.Dish{}).Where("category_id = ?", categoryId).Count(&count).Error
 
 	if err != nil {
 		return 0, err
@@ -36,7 +36,6 @@ func (m *DishDao) DishCountByCategoryId(categoryId int64) (int64, error) {
 func (m *DishDao) DishPage(page int, pageSize int, name string) (response.Page[pojo.Dish], error) {
 	// 计算偏移量
 	offset := (page - 1) * pageSize
-
 	query := m.Orm
 
 	// 构建查询条件

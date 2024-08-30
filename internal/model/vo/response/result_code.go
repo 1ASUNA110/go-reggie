@@ -32,3 +32,5 @@ func USER_IS_EXIST() ResultCode { return ResultCode{Code: 6, Msg: "用户已存�
 func ERROR_CATEGORY_BE_RELATED() ResultCode { return ResultCode{Code: 7, Msg: "分类已关联"} }
 
 func UOLOAD_FILE_TYPE_ERROR() ResultCode { return ResultCode{Code: 8, Msg: "文件类型错误"} }
+
+func FILE_UPLOAD_ERROR() ResultCode { return ResultCode{Code: 9, Msg: "文件上传失败"} }

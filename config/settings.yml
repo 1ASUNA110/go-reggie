@@ -14,5 +14,10 @@ db:
     charset: utf8
     maxIdleConns : 10
     maxOpenConns : 10
-
+minio:
+  endpoint: localhost:9000
+  accessKeyID: qelApCjSUtpm8JSepybm
+  secretAccessKey: a9AKFDeuNM9izC0EYBJ5ky00KZoGRUDxIUGIe6AK
+  useSSL: false
+  bucketName: reggie
 

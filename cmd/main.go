@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go-reggie/config"
-	"go-reggie/internal/db"
 	"go-reggie/internal/global"
 	"go-reggie/internal/middleware"
 	"go-reggie/internal/route"
@@ -16,10 +15,28 @@ import (
 func Start() {
 	config.InitConfig()
 
+	// 初始化数据库
+	db, err := config.InitDB()
+
+	if err != nil {
+		panic(err)
+	}
+
+	global.DB = db
+
+	// 初始化minio客户端
+	minioClient, err := config.InitMinio()
+
+	if err != nil {
+		panic(err)
+	}
+
+	global.MinioClient = minioClient
 }
 
 func Clean() {
 	fmt.Println("============Clean============")
+
 }
 
 func main() {
@@ -41,15 +58,6 @@ func main() {
 
 	// 提供静态文件服务
 	r.Static("/static", "./web/static")
-
-	//从内部包中初始化数据库
-	db, err := db.InitDB()
-
-	if err != nil {
-		panic(err)
-	}
-
-	global.DB = db
 
 	// 设置路由
 	route.SetupRouter(r)

@@ -79,7 +79,7 @@ func (m *CommonApi) FileDownload(c *gin.Context) {
 	// 4、返回文件
 	c.Header("Content-Disposition", "attachment; filename="+fileName)
 	c.Header("Content-Type", stat.ContentType)
-	c.Header("Content-Length", string(stat.Size))
+	//c.Header("Content-Length", string(stat.Size))
 
 	// 将文件内容写入到响应中
 	_, err = io.Copy(c.Writer, minioObject)

@@ -1,6 +1,6 @@
-package dto
+package vo
 
-type DishFlavorDto struct {
+type DishFlavorVo struct {
 	ID     int64  `json:"id"`
 	DishID int64  `json:"dishId"`
 	Name   string `json:"name"`

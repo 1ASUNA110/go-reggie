@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-reggie/internal/model/dto"
 	"go-reggie/internal/model/vo/response"
 	"go-reggie/internal/service"
 	"strconv"
@@ -107,4 +109,54 @@ func (m *DishApi) DishUpdateStatus(c *gin.Context) {
 	}
 
 	response.Fail(resultCode, c)
+}
+
+// DishSave 保存菜品
+func (m *DishApi) DishSave(c *gin.Context) {
+	// 1、获取菜品信息
+	var dishDto dto.DishDto
+
+	err := c.ShouldBindJSON(&dishDto)
+
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		print(err.Error())
+		return
+	}
+
+	fmt.Println(dishDto)
+
+	// 2、调用service层 保存菜品
+	resultCode := m.dishService.DishSave(dishDto)
+
+	// 3、返回响应
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+
+	response.Fail(resultCode, c)
+}
+
+// DishGetById 根据id查询菜品
+func (m *DishApi) DishGetById(c *gin.Context) {
+	// 1、获取菜品id
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+	}
+
+	// 2、调用service层 根据id查询菜品
+	dishVo, resultCode := m.dishService.DishGetById(id)
+
+	// 3、返回响应
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(dishVo, c)
+		return
+	}
+
+	response.Fail(resultCode, c)
+
 }

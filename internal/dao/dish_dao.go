@@ -75,3 +75,20 @@ func (m *DishDao) DishDelete(id int64) error {
 func (m *DishDao) DishUpdateStatus(id int64, status int) interface{} {
 	return m.Orm.Model(pojo.Dish{}).Where("id = ?", id).Update("status", status).Error
 }
+
+func (m *DishDao) DishSave(dish pojo.Dish) error {
+	return m.Orm.Create(&dish).Error
+}
+
+func (m *DishDao) DishGetById(id int64) (pojo.Dish, error) {
+	var dish pojo.Dish
+
+	err := m.Orm.Where("id = ?", id).First(&dish).Error
+
+	if err != nil {
+		return pojo.Dish{}, err
+	}
+
+	return dish, nil
+
+}

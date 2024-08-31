@@ -9,13 +9,17 @@ func SetupDishRoutes(router *gin.Engine) {
 
 	dishApi := api.NewDishApi()
 
-	categoryRoutes := router.Group("/dish")
+	dishRoutes := router.Group("/dish")
 	{
-		categoryRoutes.GET("/page", dishApi.DishPage)
+		dishRoutes.GET("/page", dishApi.DishPage)
 
-		categoryRoutes.POST("/status/:status", dishApi.DishUpdateStatus)
+		dishRoutes.POST("/status/:status", dishApi.DishUpdateStatus)
 
-		categoryRoutes.DELETE("/", dishApi.DishDelete)
+		dishRoutes.DELETE("/", dishApi.DishDelete)
+
+		dishRoutes.POST("/", dishApi.DishSave)
+
+		dishRoutes.GET("/:id", dishApi.DishGetById)
 	}
 
 }

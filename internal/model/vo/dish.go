@@ -1,4 +1,4 @@
-package pojo
+package vo
 
 type DishVo struct {
 	ID          int64   `json:"id,string"`
@@ -18,4 +18,7 @@ type DishVo struct {
 
 	// 分类名
 	CategoryName string `json:"categoryName,omitempty"`
+
+	// 口味
+	Flavors []DishFlavorVo `json:"flavors"`
 }

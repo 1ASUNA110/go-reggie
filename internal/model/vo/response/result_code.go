@@ -34,3 +34,7 @@ func ERROR_CATEGORY_BE_RELATED() ResultCode { return ResultCode{Code: 7, Msg: "�
 func UOLOAD_FILE_TYPE_ERROR() ResultCode { return ResultCode{Code: 8, Msg: "文件类型错误"} }
 
 func FILE_UPLOAD_ERROR() ResultCode { return ResultCode{Code: 9, Msg: "文件上传失败"} }
+
+func ERROR_DISH_NAME_UNIQUE() ResultCode { return ResultCode{Code: 10, Msg: "菜品名称已存在"} }
+
+func ERROR_DISH_NOT_FOUND() ResultCode { return ResultCode{Code: 11, Msg: "菜品不存在"} }

@@ -115,16 +115,6 @@ func (m *DishService) DishSave(dto dto.DishDto) response.ResultCode {
 	// 2、对象拷贝
 	copier.Copy(&dish, &dto)
 
-	// 3、获取菜品口味信息
-	var flavors []pojo.DishFlavor
-
-	for i := 0; i < len(dto.Flavors); i++ {
-		flavor := pojo.DishFlavor{}
-		copier.Copy(&flavor, &dto.Flavors[i])
-		flavor.DishID = dish.ID
-		flavors = append(flavors, flavor)
-	}
-
 	// 4、开启事务
 	tx := m.dishDao.Orm.Begin()
 
@@ -140,6 +130,16 @@ func (m *DishService) DishSave(dto dto.DishDto) response.ResultCode {
 		}
 
 		return response.SERVER_ERROR()
+	}
+
+	// 3、获取菜品口味信息
+	var flavors []pojo.DishFlavor
+
+	for i := 0; i < len(dto.Flavors); i++ {
+		flavor := pojo.DishFlavor{}
+		copier.Copy(&flavor, &dto.Flavors[i])
+		flavor.DishID = dish.ID
+		flavors = append(flavors, flavor)
 	}
 
 	// 6、在事务中保存菜品口味
@@ -234,4 +234,46 @@ func (m *DishService) DishList(categoryId int64) ([]vo.DishVo, response.ResultCo
 	}
 
 	return dishVoList, response.SUCCESS()
+}
+
+// DishUpdate 更新菜品
+func (m *DishService) DishUpdate(dishDto dto.DishDto) response.ResultCode {
+	// 1、获取菜品信息
+	var dish pojo.Dish
+
+	// 对象拷贝
+	copier.Copy(&dish, &dishDto)
+
+	// 2、更新菜品
+	err := m.dishDao.DishUpdate(dish)
+
+	if err != nil {
+		return response.SERVER_ERROR()
+	}
+
+	// 3、删除菜品口味
+	err = m.dishFlavorDao.DishFlavorDeleteByDishId(dishDto.ID)
+
+	if err != nil {
+		return response.SERVER_ERROR()
+	}
+
+	// 4、添加菜品口味
+	for i := 0; i < len(dishDto.Flavors); i++ {
+		dishFlavor := pojo.DishFlavor{}
+
+		copier.Copy(&dishFlavor, &dishDto.Flavors[i])
+
+		dishFlavor.DishID = dishDto.ID
+
+		err = m.dishFlavorDao.DishFlavorSave(dishFlavor)
+
+		if err != nil {
+			return response.SERVER_ERROR()
+		}
+
+	}
+
+	return response.SUCCESS()
+
 }

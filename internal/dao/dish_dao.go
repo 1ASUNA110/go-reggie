@@ -104,3 +104,7 @@ func (m *DishDao) DishList(categoryId int64) ([]pojo.Dish, error) {
 
 	return dishes, nil
 }
+
+func (m *DishDao) DishUpdate(dish pojo.Dish) error {
+	return m.Orm.Model(&dish).Updates(dish).Error
+}

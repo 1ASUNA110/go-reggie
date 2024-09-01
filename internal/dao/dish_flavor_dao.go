@@ -18,9 +18,9 @@ func NewDishFlavorDao() *DishFlavorDao {
 	return dishFlavorDao
 }
 
-func (d DishFlavorDao) DishFlavorSave(flavors []pojo.DishFlavor) error {
+func (d DishFlavorDao) DishFlavorSave(flavor pojo.DishFlavor) error {
 
-	return d.Orm.Create(&flavors).Error
+	return d.Orm.Create(&flavor).Error
 
 }
 
@@ -35,4 +35,8 @@ func (d DishFlavorDao) DishFlavorGetByDishId(id int64) ([]pojo.DishFlavor, error
 
 	return flavors, nil
 
+}
+
+func (d DishFlavorDao) DishFlavorDeleteByDishId(dishId int64) error {
+	return d.Orm.Where("dish_id = ?", dishId).Delete(&pojo.DishFlavor{}).Error
 }

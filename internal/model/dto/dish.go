@@ -4,7 +4,7 @@ type DishDto struct {
 	ID          int64           `json:"id,string"`
 	Name        string          `json:"name"`
 	CategoryID  int64           `json:"categoryId,string"`
-	Price       float64         `json:"price,string"`
+	Price       float64         `json:"price"`
 	Code        string          `json:"code"`
 	Image       string          `json:"image"`
 	Description string          `json:"description,omitempty"`

@@ -58,8 +58,6 @@ func (m *DishApi) DishPage(c *gin.Context) {
 
 }
 
-// DishSave 保存菜品
-
 // DishDelete 删除菜品
 func (m *DishApi) DishDelete(c *gin.Context) {
 	// 1、获取菜品id

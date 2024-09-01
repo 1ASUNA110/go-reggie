@@ -87,9 +87,3 @@ func (m *SetmealDao) SetmealUpdateStatus(id int64, status int) interface{} {
 	return m.Orm.Model(&pojo.Setmeal{}).Where("id = ?", id).Update("status", status).Error
 
 }
-
-func (m *SetmealDao) DishDelete(id int64) interface{} {
-
-	return m.Orm.Delete(pojo.Setmeal{}, id).Error
-
-}

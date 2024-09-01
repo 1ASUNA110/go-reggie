@@ -149,7 +149,7 @@ func (m *SetmealService) SetmealDelete(ids []int64) response.ResultCode {
 	// 1、调用dao层
 	for _, id := range ids {
 
-		err := m.setmealDao.DishDelete(id)
+		err := m.setmealDao.SetmealDelete(id)
 
 		if err != nil {
 			return response.SERVER_ERROR()

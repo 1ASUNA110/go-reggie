@@ -17,7 +17,7 @@ func SetupSetmealRoutes(router *gin.Engine) {
 
 		setmealRoutes.POST("/status/:status", setmealApi.SetmealUpdateStatus)
 
-		//setmealRoutes.DELETE("/", setmealApi.SetmealDelete)
+		setmealRoutes.DELETE("/", setmealApi.SetmealDelete)
 		//
 		//setmealRoutes.PUT("/", setmealApi.SetmealUpdate)
 		//

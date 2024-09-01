@@ -7,6 +7,7 @@ import (
 	"go-reggie/internal/model/vo/response"
 	"go-reggie/internal/service"
 	"strconv"
+	"strings"
 )
 
 type DishApi struct {
@@ -62,15 +63,23 @@ func (m *DishApi) DishPage(c *gin.Context) {
 // DishDelete 删除菜品
 func (m *DishApi) DishDelete(c *gin.Context) {
 	// 1、获取菜品id
-	idStr := c.Param("id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
-		return
+	idsStr := c.Query("ids")
+
+	idList := strings.Split(idsStr, ",")
+
+	ids := make([]int64, 0)
+
+	for _, idStr := range idList {
+		id, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
+			response.Fail(response.PARAM_ERROR(), c)
+			return
+		}
+		ids = append(ids, id)
 	}
 
 	// 2、调用service层 删除菜品
-	resultCode := m.dishService.DishDelete(id)
+	resultCode := m.dishService.DishDelete(ids)
 
 	// 3、返回响应
 	if resultCode.Code == response.SUCCESS().Code {
@@ -83,7 +92,7 @@ func (m *DishApi) DishDelete(c *gin.Context) {
 
 // DishUpdateStatus 更新菜品状态
 func (m *DishApi) DishUpdateStatus(c *gin.Context) {
-	// 1、获取菜品id
+	// 1、获取状态
 	statusStr := c.Param("status")
 	status, err := strconv.Atoi(statusStr)
 	if err != nil {
@@ -91,12 +100,20 @@ func (m *DishApi) DishUpdateStatus(c *gin.Context) {
 		return
 	}
 
-	// 2、获取状态
+	// 2、获取菜品ids
 	idsStr := c.Query("ids")
-	ids, err := strconv.ParseInt(idsStr, 10, 64)
-	if err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
-		return
+
+	idList := strings.Split(idsStr, ",")
+
+	ids := make([]int64, 0)
+
+	for _, idStr := range idList {
+		id, err := strconv.ParseInt(idStr, 10, 64)
+		if err != nil {
+			response.Fail(response.PARAM_ERROR(), c)
+			return
+		}
+		ids = append(ids, id)
 	}
 
 	// 3、调用service层 更新菜品状态

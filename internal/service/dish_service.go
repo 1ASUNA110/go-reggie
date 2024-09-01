@@ -76,26 +76,31 @@ func (m *DishService) DishPage(page int, pageSize int, name string) (response.Pa
 }
 
 // DishDelete 菜品删除
-func (m *DishService) DishDelete(id int64) response.ResultCode {
+func (m *DishService) DishDelete(ids []int64) response.ResultCode {
 
 	// 1、调用dao层
-	err := m.dishDao.DishDelete(id)
+	for _, id := range ids {
 
-	if err != nil {
-		return response.SERVER_ERROR()
+		err := m.dishDao.DishDelete(id)
+
+		if err != nil {
+			return response.SERVER_ERROR()
+		}
 	}
-
 	return response.SUCCESS()
 
 }
 
-func (m *DishService) DishUpdateStatus(id int64, status int) response.ResultCode {
+func (m *DishService) DishUpdateStatus(ids []int64, status int) response.ResultCode {
 
 	// 1、调用dao层
-	err := m.dishDao.DishUpdateStatus(id, status)
+	for _, id := range ids {
 
-	if err != nil {
-		return response.SERVER_ERROR()
+		err := m.dishDao.DishUpdateStatus(id, status)
+
+		if err != nil {
+			return response.SERVER_ERROR()
+		}
 	}
 
 	return response.SUCCESS()

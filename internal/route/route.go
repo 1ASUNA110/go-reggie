@@ -9,5 +9,5 @@ func SetupRouter(router *gin.Engine) {
 	SetupCategoryRoutes(router)
 	SetupCommonRoutes(router)
 	SetupDishRoutes(router)
-
+	SetupSetmealRoutes(router)
 }

@@ -79,7 +79,6 @@ func (m *CommonApi) FileDownload(c *gin.Context) {
 	// 4、返回文件
 	c.Header("Content-Disposition", "attachment; filename="+fileName)
 	c.Header("Content-Type", stat.ContentType)
-	//c.Header("Content-Length", string(stat.Size))
 
 	// 将文件内容写入到响应中
 	_, err = io.Copy(c.Writer, minioObject)
@@ -112,7 +111,6 @@ func (m *CommonApi) returnErrorImage(c *gin.Context, errorImagePath string) {
 	// 设置响应头，返回错误图片
 	c.Header("Content-Disposition", "inline; filename="+errorImagePath)
 	c.Header("Content-Type", stat.ContentType)
-	c.Header("Content-Length", string(stat.Size))
 
 	// 将错误图片内容写入到响应中
 	_, err = io.Copy(c.Writer, errorObject)

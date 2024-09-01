@@ -11,7 +11,7 @@ func SetupSetmealRoutes(router *gin.Engine) {
 
 	setmealRoutes := router.Group("/setmeal")
 	{
-		//setmealRoutes.POST("/", setmealApi.SetmealSave)
+		setmealRoutes.POST("/", setmealApi.SetmealSave)
 
 		setmealRoutes.GET("/page", setmealApi.SetmealPage)
 

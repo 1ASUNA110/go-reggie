@@ -1,8 +1,10 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"go-reggie/internal/model/dto"
 	"go-reggie/internal/model/vo/response"
 	"go-reggie/internal/service"
 	"strconv"
@@ -25,33 +27,32 @@ func NewSetmealApi() *SetmealApi {
 	return setmealApi
 }
 
-// SetmealSave 保存分类
-//func (m *SetmealApi) SetmealSave(c *gin.Context) {
-//	// 1、校验请求参数
-//	var setmealDto dto.SetmealDto
-//
-//	// 绑定失败 抛出参数错误异常
-//	if err := c.ShouldBind(&setmealDto); err != nil {
-//		fmt.Println(err)
-//		response.Fail(response.PARAM_ERROR(), c)
-//		return
-//	}
-//
-//	// 2、从session中获取当前登录用户
-//	session := sessions.Default(c)
-//	employeeId := session.Get("employee").(int64)
-//
-//	// 3、调用service层 保存分类
-//	resultCode := m.setmealService.SetmealSave(setmealDto, employeeId)
-//
-//	// 4、返回响应
-//	if resultCode.Code == response.SUCCESS().Code {
-//		response.Ok(nil, c)
-//		return
-//	}
-//
-//	response.Fail(resultCode, c)
-//}
+// SetmealSave 保存套餐
+func (m *SetmealApi) SetmealSave(c *gin.Context) {
+	// 1、获取套餐信息
+	var setmealDto dto.SetmealDto
+
+	err := c.ShouldBindJSON(&setmealDto)
+
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		print(err.Error())
+		return
+	}
+
+	fmt.Println(setmealDto)
+
+	// 2、调用service层 保存套餐
+	resultCode := m.setmealService.SetmealSave(setmealDto)
+
+	// 3、返回响应
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+
+	response.Fail(resultCode, c)
+}
 
 // SetmealPage 套餐分页查询
 func (m *SetmealApi) SetmealPage(c *gin.Context) {
@@ -141,25 +142,6 @@ func (m *SetmealApi) SetmealUpdate(c *gin.Context) {
 	response.Fail(resultCode, c)
 
 }
-
-//
-//// SetmealList 分类列表
-//func (m *SetmealApi) SetmealList(c *gin.Context) {
-//
-//	// 1、获取参数
-//	setmealTypeStr := c.Query("type")
-//	setmealType, _ := strconv.Atoi(setmealTypeStr)
-//
-//	// 2、调用service层 查询分类列表
-//	setmealList, resultCode := m.setmealService.SetmealList(setmealType)
-//
-//	if resultCode.Code == response.SUCCESS().Code {
-//		response.Ok(setmealList, c)
-//		return
-//	}
-//	response.Fail(resultCode, c)
-//
-//}
 
 // SetmealUpdateStatus 更新套餐状态
 func (m *SetmealApi) SetmealUpdateStatus(c *gin.Context) {

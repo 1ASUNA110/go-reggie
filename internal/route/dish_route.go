@@ -20,6 +20,9 @@ func SetupDishRoutes(router *gin.Engine) {
 		dishRoutes.POST("/", dishApi.DishSave)
 
 		dishRoutes.GET("/:id", dishApi.DishGetById)
+
+		dishRoutes.GET("/list", dishApi.DishList)
+
 	}
 
 }

@@ -204,3 +204,33 @@ func (m *DishService) DishGetById(id int64) (vo.DishVo, response.ResultCode) {
 	return dishVo, response.SUCCESS()
 
 }
+
+func (m *DishService) DishList(categoryId int64) ([]vo.DishVo, response.ResultCode) {
+
+	// 1、调用dao层查询菜品
+	dishes, err := m.dishDao.DishList(categoryId)
+
+	if err != nil {
+		return []vo.DishVo{}, response.SERVER_ERROR()
+	}
+
+	// 2、判断是否查询到菜品
+	if len(dishes) == 0 {
+		return []vo.DishVo{}, response.SUCCESS()
+	}
+
+	dishVoList := []vo.DishVo{}
+	// 3、构建返回值
+	for i := 0; i < len(dishes); i++ {
+
+		// 5、构建返回值
+		dishVo := vo.DishVo{}
+
+		// 对象拷贝
+		copier.Copy(&dishVo, &dishes[i])
+
+		dishVoList = append(dishVoList, dishVo)
+	}
+
+	return dishVoList, response.SUCCESS()
+}

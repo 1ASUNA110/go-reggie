@@ -177,3 +177,31 @@ func (m *DishApi) DishGetById(c *gin.Context) {
 	response.Fail(resultCode, c)
 
 }
+
+// DishUpdate 更新菜品
+
+// DishList 菜品列表
+func (m *DishApi) DishList(c *gin.Context) {
+
+	// 1、获取参数
+	categoryIdStr := c.Query("categoryId")
+
+	categoryId, err := strconv.ParseInt(categoryIdStr, 10, 64)
+
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 2、调用service层 查询菜品列表
+	dishList, resultCode := m.dishService.DishList(categoryId)
+
+	// 3、返回响应
+	if resultCode.Code != response.SUCCESS().Code {
+		response.Fail(resultCode, c)
+		return
+	}
+
+	response.Ok(dishList, c)
+
+}

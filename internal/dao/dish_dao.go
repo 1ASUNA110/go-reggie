@@ -92,3 +92,15 @@ func (m *DishDao) DishGetById(id int64) (pojo.Dish, error) {
 	return dish, nil
 
 }
+
+func (m *DishDao) DishList(categoryId int64) ([]pojo.Dish, error) {
+	var dishes []pojo.Dish
+
+	err := m.Orm.Where("category_id = ?", categoryId).Find(&dishes).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return dishes, nil
+}

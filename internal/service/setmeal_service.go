@@ -3,15 +3,18 @@ package service
 import (
 	"github.com/jinzhu/copier"
 	"go-reggie/internal/dao"
+	"go-reggie/internal/model/dto"
+	"go-reggie/internal/model/pojo"
 	"go-reggie/internal/model/vo"
 	"go-reggie/internal/model/vo/response"
 	"strconv"
 )
 
 type SetmealService struct {
-	setmealDao  *dao.SetmealDao
-	dishDao     *dao.DishDao
-	categoryDao *dao.CategoryDao
+	setmealDao     *dao.SetmealDao
+	dishDao        *dao.DishDao
+	categoryDao    *dao.CategoryDao
+	setmealDishDao *dao.SetmealDishDao
 }
 
 var setmealService *SetmealService
@@ -19,9 +22,10 @@ var setmealService *SetmealService
 func NewSetmealService() *SetmealService {
 	if setmealService == nil {
 		setmealService = &SetmealService{
-			setmealDao:  dao.NewSetmealDao(),
-			dishDao:     dao.NewDishDao(),
-			categoryDao: dao.NewCategoryDao(),
+			setmealDao:     dao.NewSetmealDao(),
+			dishDao:        dao.NewDishDao(),
+			categoryDao:    dao.NewCategoryDao(),
+			setmealDishDao: dao.NewSetmealDishDao(),
 		}
 	}
 
@@ -154,15 +158,38 @@ func (m *SetmealService) SetmealDelete(ids []int64) response.ResultCode {
 	return response.SUCCESS()
 }
 
-//func (m *SetmealService) SetmealList(setmealType int) ([]pojo.Setmeal, response.ResultCode) {
-//
-//	// 1、调用dao层查询分类列表
-//	setmealList, err := m.setmealDao.SetmealList(setmealType)
-//
-//	if err != nil {
-//		return nil, response.SERVER_ERROR()
-//	}
-//
-//	return setmealList, response.SUCCESS()
-//
-//}
+func (m *SetmealService) SetmealSave(setmealDto dto.SetmealDto) response.ResultCode {
+	// 1、获取套餐信息
+	var setmeal pojo.Setmeal
+
+	copier.Copy(&setmeal, &setmealDto)
+
+	// 2、调用dao层保存套餐
+	err := m.setmealDao.SetmealSave(setmeal)
+
+	if err != nil {
+		return response.SERVER_ERROR()
+	}
+
+	// 2、获取套餐菜品信息
+	setmealDishes := setmealDto.SetmealDishes
+
+	// 3、调用dao层保存套餐菜品
+	for i := 0; i < len(setmealDishes); i++ {
+		var setmealDish pojo.SetmealDish
+
+		copier.Copy(&setmealDish, &setmealDishes[i])
+
+		setmealDish.SetmealID = setmeal.ID
+
+		err := m.setmealDishDao.SetmealDishSave(setmealDish)
+
+		if err != nil {
+			return response.SERVER_ERROR()
+		}
+
+	}
+
+	return response.SUCCESS()
+
+}

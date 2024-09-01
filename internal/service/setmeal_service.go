@@ -7,7 +7,6 @@ import (
 	"go-reggie/internal/model/pojo"
 	"go-reggie/internal/model/vo"
 	"go-reggie/internal/model/vo/response"
-	"strconv"
 )
 
 type SetmealService struct {
@@ -32,27 +31,6 @@ func NewSetmealService() *SetmealService {
 	return setmealService
 
 }
-
-//func (m *SetmealService) SetmealSave(dto dto.SetmealDto, employeeId int64) response.ResultCode {
-//	// 1、创建分类对象
-//	setmeal := pojo.Setmeal{
-//		Type:       dto.Type,
-//		Name:       dto.Name,
-//		Sort:       dto.Sort,
-//		CreateUser: employeeId,
-//		UpdateUser: employeeId,
-//	}
-//
-//	// 2、调用dao层保存分类
-//	err := m.setmealDao.SetmealSave(setmeal)
-//
-//	if err != nil {
-//		return response.SERVER_ERROR()
-//	}
-//
-//	return response.SUCCESS()
-//
-//}
 
 func (m *SetmealService) SetmealPage(page int, pageSize int, name string) (response.Page[vo.SetmealVo], response.ResultCode) {
 
@@ -95,28 +73,31 @@ func (m *SetmealService) SetmealPage(page int, pageSize int, name string) (respo
 
 }
 
-// SetmealUpdate todo 更新套餐
-func (m *SetmealService) SetmealUpdate(requestMap map[string]interface{}, employeeId int64) response.ResultCode {
-	// 0、校验请求参数
-	// 0.1、校验ID是否为空
-	idStr, ok := requestMap["id"].(string)
-	if !ok {
-		return response.PARAM_ERROR()
-	}
-	id, err := strconv.ParseInt(idStr, 10, 64)
+// SetmealUpdate 更新套餐
+func (m *SetmealService) SetmealUpdate(setmealDto dto.SetmealDto) response.ResultCode {
+	// 1、创建套餐对象
+	setmeal := pojo.Setmeal{}
+	copier.Copy(&setmeal, &setmealDto)
+
+	// 2、调用dao层更新套餐
+	err := m.setmealDao.SetmealUpdate(setmeal)
+
 	if err != nil {
-		return response.PARAM_ERROR()
+		return response.SERVER_ERROR()
 	}
 
-	// 1、构建updateMap
-	updateMap := map[string]interface{}{
-		//"name":        requestMap["name"],
-		//"sort":        requestMap["sort"],
-		//"update_user": employeeId,
-	}
+	// 3、删除套餐菜品关系
+	err = m.setmealDishDao.SetmealDishDeleteBySetmealId(setmeal.ID)
 
-	// 2、调用dao层更新分类
-	err = m.setmealDao.SetmealUpdateById(id, updateMap)
+	// 4、重新添加套餐菜品关系
+	for _, dish := range setmealDto.SetmealDishes {
+		setmealDish := pojo.SetmealDish{}
+		copier.Copy(&setmealDish, &dish)
+
+		setmealDish.SetmealID = setmeal.ID
+
+		err = m.setmealDishDao.SetmealDishSave(setmealDish)
+	}
 
 	if err != nil {
 		return response.SERVER_ERROR()
@@ -165,7 +146,7 @@ func (m *SetmealService) SetmealSave(setmealDto dto.SetmealDto) response.ResultC
 	copier.Copy(&setmeal, &setmealDto)
 
 	// 2、调用dao层保存套餐
-	err := m.setmealDao.SetmealSave(setmeal)
+	err := m.setmealDao.SetmealSave(&setmeal)
 
 	if err != nil {
 		return response.SERVER_ERROR()
@@ -191,5 +172,49 @@ func (m *SetmealService) SetmealSave(setmealDto dto.SetmealDto) response.ResultC
 	}
 
 	return response.SUCCESS()
+
+}
+
+func (m *SetmealService) SetmealGetById(id int64) (vo.SetmealVo, response.ResultCode) {
+
+	// 1、调用dao层获取套餐信息
+	setmeal, err := m.setmealDao.SetmealGetById(id)
+
+	if err != nil {
+		return vo.SetmealVo{}, response.SERVER_ERROR()
+	}
+
+	// 2、调用dao层获取套餐菜品信息
+	setmealDishes, err := m.setmealDishDao.SetmealDishGetBySetmealId(id)
+
+	if err != nil {
+		return vo.SetmealVo{}, response.SERVER_ERROR()
+	}
+
+	// 3、调用dao层获取分类信息
+	category, err := m.categoryDao.CategoryGetById(setmeal.CategoryID)
+
+	// 3、构建返回值
+	var setmealVo vo.SetmealVo
+
+	copier.Copy(&setmealVo, &setmeal)
+
+	// 4、构建setmealDishVo
+	var setmealDishVos []vo.SetmealDishVo
+
+	for i := 0; i < len(setmealDishes); i++ {
+		var setmealDishVo vo.SetmealDishVo
+		copier.Copy(&setmealDishVo, &setmealDishes[i])
+		setmealDishVos = append(setmealDishVos, setmealDishVo)
+	}
+	setmealVo.SetmealDishes = setmealDishVos
+
+	if err != nil {
+		return setmealVo, response.SERVER_ERROR()
+	}
+
+	setmealVo.CategoryName = category.Name
+
+	return setmealVo, response.SUCCESS()
 
 }

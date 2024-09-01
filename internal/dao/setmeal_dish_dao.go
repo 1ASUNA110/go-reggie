@@ -19,6 +19,22 @@ func NewSetmealDishDao() *SetmealDishDao {
 }
 
 // SetmealDishSave 保存套餐菜品
-func (d SetmealDishDao) SetmealDishSave(dish pojo.SetmealDish) interface{} {
-	return d.Orm.Create(&dish).Error
+func (d SetmealDishDao) SetmealDishSave(setmealDish pojo.SetmealDish) error {
+	return d.Orm.Create(&setmealDish).Error
+}
+
+func (d SetmealDishDao) SetmealDishGetBySetmealId(id int64) ([]pojo.SetmealDish, error) {
+	var setmealDishes []pojo.SetmealDish
+
+	err := d.Orm.Where("setmeal_id = ?", id).Find(&setmealDishes).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return setmealDishes, nil
+}
+
+func (d SetmealDishDao) SetmealDishDeleteBySetmealId(id int64) error {
+	return d.Orm.Where("setmeal_id = ?", id).Delete(&pojo.SetmealDish{}).Error
 }

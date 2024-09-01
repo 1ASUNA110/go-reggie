@@ -91,6 +91,7 @@ func (m *DishService) DishDelete(ids []int64) response.ResultCode {
 
 }
 
+// DishUpdateStatus 菜品状态更新
 func (m *DishService) DishUpdateStatus(ids []int64, status int) response.ResultCode {
 
 	// 1、调用dao层

@@ -18,4 +18,7 @@ type SetmealVo struct {
 
 	// 分类名
 	CategoryName string `json:"categoryName,omitempty"`
+
+	// 套餐关联的菜品列表
+	SetmealDishes []SetmealDishVo `json:"setmealDishes,omitempty"`
 }

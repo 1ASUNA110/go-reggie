@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-reggie/internal/model/dto"
 	"go-reggie/internal/model/vo/response"
@@ -118,31 +117,6 @@ func (m *SetmealApi) SetmealDelete(c *gin.Context) {
 
 }
 
-// SetmealUpdate 更新套餐
-func (m *SetmealApi) SetmealUpdate(c *gin.Context) {
-	// 1、校验请求参数
-	var requestMap map[string]interface{}
-
-	if err := c.BindJSON(&requestMap); err != nil {
-		response.Fail(response.PARAM_ERROR(), c)
-		return
-	}
-
-	// 2、获取当前登录用户的ID
-	session := sessions.Default(c)
-	employeeID := session.Get("employee")
-
-	// 3、调用service层 更新分类信息
-	resultCode := m.setmealService.SetmealUpdate(requestMap, employeeID.(int64))
-
-	if resultCode.Code == response.SUCCESS().Code {
-		response.Ok(nil, c)
-		return
-	}
-	response.Fail(resultCode, c)
-
-}
-
 // SetmealUpdateStatus 更新套餐状态
 func (m *SetmealApi) SetmealUpdateStatus(c *gin.Context) {
 	// 1、获取状态
@@ -179,4 +153,53 @@ func (m *SetmealApi) SetmealUpdateStatus(c *gin.Context) {
 	}
 
 	response.Fail(resultCode, c)
+}
+
+// SetmealGetById
+func (m *SetmealApi) SetmealGetById(c *gin.Context) {
+	// 1、获取套餐id
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+
+	if err != nil {
+		print(err.Error())
+		response.Fail(response.PARAM_ERROR(), c)
+		return
+	}
+
+	// 2、调用service层 获取套餐信息
+	setmeal, resultCode := m.setmealService.SetmealGetById(id)
+
+	// 3、返回响应
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(setmeal, c)
+		return
+	}
+
+	response.Fail(resultCode, c)
+}
+
+// SetmealUpdate
+func (m *SetmealApi) SetmealUpdate(c *gin.Context) {
+	// 1、获取参数
+	var setmealDto dto.SetmealDto
+
+	err := c.ShouldBindJSON(&setmealDto)
+
+	if err != nil {
+		response.Fail(response.PARAM_ERROR(), c)
+	}
+
+	// 2、调用service层 更新套餐信息
+	resultCode := m.setmealService.SetmealUpdate(setmealDto)
+
+	// 3、返回响应
+	if resultCode.Code == response.SUCCESS().Code {
+		response.Ok(nil, c)
+		return
+	}
+
+	response.Fail(resultCode, c)
+
 }

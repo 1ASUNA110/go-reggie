@@ -21,8 +21,8 @@ func NewSetmealDao() *SetmealDao {
 	return setmealDao
 }
 
-func (m *SetmealDao) SetmealSave(setmeal pojo.Setmeal) error {
-	return m.Orm.Create(&setmeal).Error
+func (m *SetmealDao) SetmealSave(setmeal *pojo.Setmeal) error {
+	return m.Orm.Create(setmeal).Error
 }
 
 func (m *SetmealDao) SetmealPage(page int, pageSize int, name string) (response.Page[pojo.Setmeal], error) {
@@ -86,4 +86,8 @@ func (m *SetmealDao) SetmealUpdateStatus(id int64, status int) interface{} {
 
 	return m.Orm.Model(&pojo.Setmeal{}).Where("id = ?", id).Update("status", status).Error
 
+}
+
+func (m *SetmealDao) SetmealUpdate(setmeal pojo.Setmeal) error {
+	return m.Orm.Updates(setmeal).Error
 }
